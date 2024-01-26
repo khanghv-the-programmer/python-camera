@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from Services.model import Users,Captures,Cameras,Events
+from Services.model import Users, Captures, Cameras, Events
 
 db_schema = 'streaming_camera'
-postgresql_engine = create_engine("postgresql://postgres:cameraip2024@cameraip.cilyqldqbjqk.ap-southeast-1.rds.amazonaws.com:5432/postgres",
-                                  connect_args={'options': '-csearch_path={}'.format(db_schema)})
+postgresql_engine = ''
 Session = sessionmaker(bind=postgresql_engine)
 session = Session()
 
