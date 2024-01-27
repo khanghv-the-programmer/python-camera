@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
-from Services.model import Users, Captures, Cameras, Events
-from Services.Utilize import DBConnection
-from Services.Utilize.ReadConfigurationFile import read_config_from_file as config
+from model import Users, Captures, Cameras, Events
+from Utilize import DBConnection
+from Utilize.ReadConfigurationFile import read_config_from_file as config
 import urllib
 
 CONN_URI = config.connection["postgres"]

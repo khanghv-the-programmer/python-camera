@@ -1,1 +1,1 @@
-from Services.API.test_opencv import CameraThread
+from API.test_opencv import CameraThread
