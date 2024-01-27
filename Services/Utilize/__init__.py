@@ -1,2 +1,2 @@
-from Services.Utilize.Connection import DBConnection
-from Services.Utilize.ReadConfigurationFile import read_config_from_file
+from Utilize.Connection import DBConnection
+from Utilize.ReadConfigurationFile import read_config_from_file

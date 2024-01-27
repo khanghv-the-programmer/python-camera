@@ -10,3 +10,4 @@ class Cameras(Base):
     username = Column(String)
     password = Column(String)
     is_active = Column(Boolean, nullable=False, default=False)
+    is_used = Column(Boolean, nullable=False, default=False)
