@@ -4,11 +4,11 @@ import base64
 from PIL import Image
 from io import BytesIO
 import psycopg2
-from Utilize.ReadConfigurationFile import read_config_from_file as config
-from Utilize import DBConnection
+from Services.Utilize.ReadConfigurationFile import read_config_from_file as config
+from Services.Utilize import DBConnection
 import urllib
 from sqlalchemy import create_engine
-from model import Users, Captures, Cameras, Events
+from Services.model import Users, Captures, Cameras, Events
 
 
 
@@ -47,8 +47,9 @@ class CameraThread():
     def run(self):
         try:
             with DBConnection(self.postgresql_engine) as session:
-                self.active_camera = session.query(Cameras).where('is_active' == True).where('is_used' == False).first()
-                url = 'rtsp://{active_camera.username}:{active_camera.password}@{active_camera.ip}:{active_camera.port}/h264_ulaw.sdp'
+                self.active_camera = session.query(Cameras).filter(Cameras.is_active == 'True',Cameras.ip == '192.168.236.50').first()
+
+                url = f'rtsp://{self.active_camera.username}:{self.active_camera.password}@{self.active_camera.ip}:{self.active_camera.port}/h264_ulaw.sdp'
                 
             c = cv2.VideoCapture(url)
             # Create the MOG2 background subtractor object
