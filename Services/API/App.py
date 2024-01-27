@@ -10,7 +10,6 @@ DATABASE = config.connection["postgres_database"]
 SCHEMA = config.schema["postgres_schema"]
 CONN_STR = CONN_URI.format(password=urllib.parse.quote(PASSWORD),database=DATABASE)
 
-db_schema = 'streaming_camera'
 postgresql_engine = create_engine(CONN_STR,connect_args={'options': '-csearch_path={}'.format(SCHEMA)})
 
 try:
