@@ -1,0 +1,66 @@
+.register-container {
+    width: 600px;
+    height: 90%;
+    position: absolute;
+    text-decoration-color: #ffffff;
+    padding: 20px;
+    right: 10%;
+    border-radius: 10px;
+    display: grid;
+    grid-template-rows: auto 0fr auto; 
+    
+
+    .register-content {
+        grid-row: 2;
+        padding: 80px;
+    }
+    .col-12.text-p {
+        font-size: 16px;
+        color: white;
+        font-weight: 600;
+        padding-top: 10px;
+    }
+    .form-control{
+        padding: 10px;
+    }
+    
+    .col-12.form-group.register-input {
+        color: #ffffff;
+        margin: 10px 0;
+    }
+    
+    button.btn-signup {
+        color: white;
+        width: 100%;
+        margin: 10px 0;
+        height: 50px;
+        border-radius: 10px;
+        border: none;
+        background-color: #2666FA;
+    }
+}
+
+.box .text-wrapper2 {
+    color: #ffffff;
+    font-family: "Inter-Regular", Helvetica;
+    font-size: 30px;
+    font-weight: 400;
+    left: 80px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    text-decoration: none;
+    padding: 600px 0px 0px 0px;
+    text-align: center;
+}
+
+.col-12.text-regis {
+    font-size: 24px;
+    color: white;
+    font-weight: 600;
+    left: 30px;
+    padding-top: 30px;
+}
+.register-container {
+    flex: 1; /* Nội dung của đăng ký sẽ mở rộng để điền vào không gian còn lại */
+}

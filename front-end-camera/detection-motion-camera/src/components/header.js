@@ -17,7 +17,7 @@ export default function Headers() {
                     <Nav className="me-auto" >
                         <Nav>
                             <NavLink to="/" className="nav-link">Home</NavLink>
-                            <NavLink to="/camera" className="nav-link">Live Camera</NavLink>
+                            <NavLink to="/listcameras" className="nav-link">Live Camera</NavLink>
                         </Nav>
                     </Nav>
                     <Nav>
@@ -28,12 +28,12 @@ export default function Headers() {
                                 </NavLink>
                             </NavDropdown.Item>
                             <NavDropdown.Item>
-                                 <NavLink to="/sigin" style={{ color: 'white' }} className="text-decoration-none">Sign in</NavLink>
+                                <NavLink to="/register" style={{ color: 'white' }} className="text-decoration-none">Sign in</NavLink>
                             </NavDropdown.Item>
-                            <NavDropdown.Item to="#action/3.2">
-                                View
+                            <NavDropdown.Item >
+                                <NavLink to="/viewcamera" style={{ color: 'white' }} className="text-decoration-none">View camera</NavLink>
                             </NavDropdown.Item>
-                            <NavDropdown.Item to="#action/3.3">Create</NavDropdown.Item>
+                            <NavDropdown.Item> <NavLink to="/createcamera" style={{ color: 'white' }} className="text-decoration-none">Create camera</NavLink></NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item to="#action/3.4">
                                 Logout

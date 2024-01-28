@@ -1,6 +1,6 @@
 .box {
   height: 20vh;
-  background-color: #000000;
+  background-color: white;
 }
 
 .box .home-page {
@@ -148,13 +148,12 @@
   color: #ffffff;
   font-family: "Josefin Sans-Light", Helvetica;
   font-size: 20px;
-  font-weight: 300;
-  left: 649px;
+  margin: 120px;
+  left: 530px;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
   text-align: center;
-  top: 139px;
   white-space: nowrap;
-  width: 581px;
+  
 }
