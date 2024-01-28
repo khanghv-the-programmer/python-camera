@@ -9,7 +9,7 @@ from Utilize import DBConnection
 import urllib
 from sqlalchemy import create_engine
 from model import Users, Captures, Cameras, Events
-
+from sqlalchemy.sql import text
 
 
 
@@ -40,17 +40,24 @@ class CameraThread():
         print(CONN_STR)
         self.postgresql_engine = create_engine(CONN_STR,connect_args={'options': '-csearch_path={}'.format(SCHEMA)})
 
-        self.active_camera = Cameras()
+        self.active_camera = None
 
         # url = 'rtsp://admin:admin@192.168.1.7:8080/h264_ulaw.sdp'
 
     def run(self):
         try:
             with DBConnection(self.postgresql_engine) as session:
-                active_camera = session.query(Cameras).filter(Cameras.is_active == 'True', Cameras.is_used == 'False').first()
-                self.url = f'rtsp://{active_camera.username}:{active_camera.password}@{active_camera.ip}:{active_camera.port}/h264_ulaw.sdp'
+                self.active_camera = session.query(Cameras).filter(Cameras.is_active == 'True', Cameras.is_used == 'False').first()
+                if(self.active_camera is None):
+                    return
+                self.url = f'rtsp://{self.active_camera.username}:{self.active_camera.password}@{self.active_camera.ip}:{self.active_camera.port}/h264_ulaw.sdp'
+                cmd = text(f'Update streaming_camera.camera set is_used=true where id={self.active_camera.id}')
+                session.execute(cmd)
+                session.commit()
         except Exception as e:
             raise e    
+        
+        
         try:
             c = cv2.VideoCapture(self.url)
             mog = cv2.createBackgroundSubtractorMOG2()
@@ -59,6 +66,8 @@ class CameraThread():
             while True:
             # frame : image read from capture
                 ret, frame = c.read()
+                if frame is None:
+                    continue
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             
                 fgmask = mog.apply(gray)
@@ -91,9 +100,12 @@ class CameraThread():
                     # img = Image.open(image_buffer)
                     # img.show()
                     
-                    cv2.imshow('Motion Detection', cv2.resize(frame, (1280, 720)))
+                cv2.imshow('Motion Detection', cv2.resize(frame, (1280, 720)))
             # 1s add vào captures
                 if cv2.waitKey(1) == ord('q'):
+                    cmd = text(f'Update cameras set is_used=False where id={self.active_camera.id}') 
+                    session.execute(cmd)
+                    session.commit()
                     break
                 
 
