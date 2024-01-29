@@ -2,7 +2,7 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import React, { useEffect, useState } from 'react';
-import { putUpdateCamera } from './services/userservices';
+import { putUpdateCamera } from '../src/services/userservices';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

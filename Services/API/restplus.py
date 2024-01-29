@@ -3,6 +3,7 @@ import logging
 import traceback
 
 from flask_restplus import Api
+from werkzeug.utils import cached_property
 from sqlalchemy.orm.exc import NoResultFound
 
 FLASK_DEBUG = False

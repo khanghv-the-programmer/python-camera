@@ -2,7 +2,7 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import React, { useState, useEffect } from 'react';
-import { postCreateCamera } from './services/userservices';
+import { postCreateCamera } from '../src/services/userservices';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,7 +15,7 @@ export default function Createcameras(props) {
     const [status, setStatus] = useState('');
 
     const handleSaveCamera = async () => {
-        let res = await postCreateCamera(cameraName, ip, userName, ip, port, status);
+        let res = await postCreateCamera(cameraName, userName, ip, port, status);
 
         // Check if res.id is undefined or null, then set it to 1
         if (!res.id) {
@@ -68,7 +68,6 @@ export default function Createcameras(props) {
             alert('Please enter a valid port number.');
             return;
         }
-
 
     };
     useEffect(() => {

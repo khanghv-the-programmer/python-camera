@@ -5,8 +5,9 @@ Created on Tue Jan 23 19:58:26 2024
 
 @author: thaihd
 """
+import sys
+sys.path.append('D:\Python_assignment')
 import urllib
-
 from flask import Flask, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text

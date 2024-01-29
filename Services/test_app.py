@@ -3,6 +3,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from Services.API.Users.EditUser import CreateUser
 from flask_restplus import Api
 import json
+
 app = Flask(__name__)
 
 SWAGGER_URL = "/Camera"

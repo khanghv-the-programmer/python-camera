@@ -1,2 +1,4 @@
-from API.test_opencv import CameraThread
-from Utilize.Connection import  DBConnection
+import sys
+sys.path.append('D:\Python_assignment')
+from Services.API.test_opencv import CameraThread
+from Services.Utilize.Connection import  DBConnection

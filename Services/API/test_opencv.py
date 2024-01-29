@@ -1,14 +1,16 @@
+import sys
+sys.path.append('D:\Python_assignment')
 import cv2
 import time
 import base64
 from PIL import Image
 from io import BytesIO
 import psycopg2
-from Utilize.ReadConfigurationFile import read_config_from_file as config
-from Utilize import DBConnection
+from Services.Utilize.ReadConfigurationFile import read_config_from_file as config
+from Services.Utilize import DBConnection
 import urllib
 from sqlalchemy import create_engine
-from model import Users, Captures, Cameras, Events
+from Services.model import Users, Captures, Cameras, Events
 from sqlalchemy.sql import text
 import time
 import json

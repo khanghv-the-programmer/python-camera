@@ -5,7 +5,6 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from 'react-router-dom';
 export default function Headers() {
 
-
     return (
         <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark" >
             <Container>
@@ -18,6 +17,7 @@ export default function Headers() {
                         <Nav>
                             <NavLink to="/" className="nav-link">Home</NavLink>
                             <NavLink to="/listcameras" className="nav-link">Live Camera</NavLink>
+                            <NavLink to="/listusers" className="nav-link">Manage User</NavLink>
                         </Nav>
                     </Nav>
                     <Nav>
@@ -30,10 +30,9 @@ export default function Headers() {
                             <NavDropdown.Item>
                                 <NavLink to="/register" style={{ color: 'white' }} className="text-decoration-none">Sign in</NavLink>
                             </NavDropdown.Item>
-                            <NavDropdown.Item >
-                                <NavLink to="/viewcamera" style={{ color: 'white' }} className="text-decoration-none">View camera</NavLink>
+                            <NavDropdown.Item>
+                                <NavLink to="/profile" style={{ color: 'white' }} className="text-decoration-none">Profile</NavLink>
                             </NavDropdown.Item>
-                            <NavDropdown.Item> <NavLink to="/createcamera" style={{ color: 'white' }} className="text-decoration-none">Create camera</NavLink></NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item to="#action/3.4">
                                 Logout
