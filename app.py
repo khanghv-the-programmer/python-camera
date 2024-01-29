@@ -1,5 +1,6 @@
 from flask import Flask,jsonify,request,Blueprint
 from Services.API.Users.EditUser import ns as EditUser
+from Services.API.Cameras.CameraAPI import ns as CameraAPI
 from flask_restplus import Api
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
@@ -23,6 +24,7 @@ def initialize(flask_app):
     api = Api(app)
     api.init_app(Camera)
     api.add_namespace(EditUser)
+    api.add_namespace(CameraAPI)
     flask_app.register_blueprint(Camera)
     db.init_app(flask_app)
 
