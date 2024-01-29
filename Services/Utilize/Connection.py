@@ -14,6 +14,7 @@ class DBConnection:
             if exception_value:  # This is equivalent to `if exception_value is not None`
                 self.session.rollback()
             else:
+                # self.session.commit()
                 self.session.close()
 
         except Exception as e:

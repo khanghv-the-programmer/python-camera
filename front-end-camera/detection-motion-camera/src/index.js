@@ -7,6 +7,12 @@ import reportWebVitals from './reportWebVitals';
 import App from './home';
 import Logins from './login'
 import Notfound from "./components/notfound";
+import Registers from './register';
+import Listcameras from './list_camera';
+import Createcameras from './create_camera';
+import Updatecameras from './update_camera';
+import 'react-toastify/dist/ReactToastify.css';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -14,14 +20,13 @@ root.render(
       <Routes>
         <Route path='/' element={<App />}> </Route>
         <Route path="login" element={<Logins />}></Route>
-
+        <Route path="register" element={<Registers />}></Route>
+        <Route path="listcameras" element={<Listcameras />}></Route>
+        <Route path="listcameras/createcameras" element={<Createcameras />}></Route>
+        <Route path="listcameras/updatecameras" element={<Updatecameras />}></Route>
         <Route path="*" element={<Notfound />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
