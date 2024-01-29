@@ -53,6 +53,7 @@ class CameraThread():
         # url = 'rtsp://admin:admin@192.168.1.7:8080/h264_ulaw.sdp'
 
     def run(self):
+        
         try:
             with DBConnection(self.postgresql_engine) as session:
                 session = Session(bind=self.postgresql_engine)
@@ -66,7 +67,6 @@ class CameraThread():
                 session.commit()
         except Exception as e:
             raise e    
-        
         
         try:
             last_execute_time = time.time()
@@ -118,7 +118,7 @@ class CameraThread():
                 if(current_time - last_execute_time >= 3):
                     if self.event is None:
                         self.event = Events(camera_id=self.active_camera.id)
-                    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
+                    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 30]
                     self.reval, buffer = cv2.imencode('.jpg', frame, encode_param)
                     base64_image = base64.b64encode(buffer).decode('utf-8') 
                     self.captures.append(Captures(image=base64_image, capture_time=datetime.datetime.now()))
@@ -143,14 +143,27 @@ class CameraThread():
             session.commit()
             raise e
     
-    def generate_frame(self):
+    def generate_frame(self, ip):
         try:
+            with DBConnection(self.postgresql_engine) as session:
+                session = Session(bind=self.postgresql_engine)
+                self.active_camera = session.query(Cameras).filter(Cameras.is_active == 'True', Cameras.is_used == 'True', Cameras.ip == ip).first()
+                if(self.active_camera is None):
+                    print("No camera found!")
+                    return
+                self.url = f'rtsp://{self.active_camera.username}:{self.active_camera.password}@{self.active_camera.ip}:{self.active_camera.port}/h264_ulaw.sdp'
+                cmd = text(f'Update streaming_camera.camera set is_used=true where id={self.active_camera.id}')
+                session.execute(cmd)
+                session.commit()
+        except Exception as e:
+            raise e   
+        try:
+            print("Ahihi", self.url)
+            video_capture = cv2.VideoCapture(self.url)
             mog = cv2.createBackgroundSubtractorMOG2()
-            self.counter = 0
-            self.captures = []
             while True:
             # frame : image read from capture
-                ret, frame = self.video_capture.read()
+                ret, frame = video_capture.read()
                 if frame is None:
                     continue
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

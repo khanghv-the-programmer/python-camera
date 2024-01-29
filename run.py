@@ -1,4 +1,4 @@
-from API import CameraThread
+from Services.API import CameraThread
 import subprocess
 
 camera_thread = CameraThread() 

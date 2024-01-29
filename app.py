@@ -27,6 +27,7 @@ def initialize(flask_app):
     api.add_namespace(CameraAPI)
     flask_app.register_blueprint(Camera)
     db.init_app(flask_app)
+    
 
 
 def main():

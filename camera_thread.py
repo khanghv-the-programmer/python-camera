@@ -1,14 +1,13 @@
 import sys
-sys.path.append('D:/Assignment/Services')
 from flask import Flask, Response
-from API import CameraThread
+from Services.API import CameraThread
 import threading
 app = Flask(__name__)
 thread = CameraThread()
 
-@app.route('/video')
-def video():
-    return Response(thread.generate_frame(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/video/<string:ip>')
+def video(ip):
+    return Response(thread.generate_frame(ip), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def start_flask():
     app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
