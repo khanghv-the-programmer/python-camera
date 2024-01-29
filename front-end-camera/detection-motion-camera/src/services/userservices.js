@@ -1,15 +1,13 @@
 import axios from './customize-axios';
 
-const fetchAllusers = () => {
-    return axios.get("/api/users");
-}
 //User
-
-const postCreateUser = (fullname, userName, password, isactive) => {
-    return axios.post("/api/users/GetUser", { fullname, userName, password, isactive })
+const fetchAllusers = () => {
+    return axios.get("/api/users/GetUser");
 }
 
-
+const postCreateUser = (full_name, user_name, password, isactive) => {
+    return axios.post("/api/users/EditUser", { full_name, user_name, password, isactive })
+}
 //Camera
 const postCreateCamera = (cameraName, userName, ip, port, status) => {
     return axios.post("/api/users/GetUser", { cameraName, userName, ip, port, status })

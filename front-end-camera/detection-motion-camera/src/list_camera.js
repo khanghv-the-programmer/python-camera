@@ -44,6 +44,7 @@ export default function Listcamera() {
         console.log(res);
         if (res && res.data) {
             setlistcameras(res.data);
+            console.log(res.data);
         }
     }
 

@@ -5,9 +5,10 @@ import Button from 'react-bootstrap/Button';
 import Headers from './components/header';
 import Footers from './components/footer';
 import Createusers from "./create_user";
-import { fetchAllusers } from '../src/services/userservices';
+import { fetchAllusers } from "./services/userservices";
 import { useEffect, useState } from "react";
 import { ToastContainer } from 'react-toastify';
+import Axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function ListUser() {
@@ -17,16 +18,29 @@ export default function ListUser() {
     const handleClose = () => {
         setIsShowModalAddNew(false);
     }
+
     const getUsers = async () => {
-        let res = await fetchAllusers();
-        console.log(res);
-        if (res && res.data) {
-            setlistusers(res.data);
+        try {
+            let res = await fetchAllusers();
+            console.log("Fetched data:", res.result.items); // Log the fetched data
+            if (res && res.result.items) {
+                setlistusers(res.result.items);
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
         }
     }
 
     useEffect(() => {
         getUsers();
+        Axios({
+            method: 'get',
+            headers: { 'Content-Type': 'application/json' },
+            url: 'http://192.168.5.39:8080/api/users/GetUser',
+            data:  getUsers,
+        }).then(function (response) {
+            console.log(response);
+        });
     }, [])
 
     const handleUpdateUser = (user) => {
@@ -53,15 +67,13 @@ export default function ListUser() {
                             return (
                                 <tr key={`user-${index}`}>
                                     <td className="col-2">{item.id}</td>
-                                    <td>{item.fullname}</td>
-                                    <td>{item.userName}</td>
+                                    <td>{item.full_name}</td>
+                                    <td>{item.username}</td>
                                     <td>{item.password}</td>
-                                    <td>{item.isactive}</td>
-
+                                    <td>{item.isactive ? 'Active' : 'Inactive'}</td>
                                 </tr>
                             )
-                        })
-                        }
+                        })}
                     </tbody>
                 </Table>
                 <Button variant="primary" onClick={() => setIsShowModalAddNew(true)}>Create new user</Button>

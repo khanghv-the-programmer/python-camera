@@ -1,7 +1,7 @@
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { postCreateUser } from './services/userservices';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,48 +9,36 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Createusers(props) {
     const { show, handleClose, handleUpdateUser } = props;
     const [fullname, setFullname] = useState('');
-    const [userName, setUserName] = useState('');
+    const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [isactive, setisactive] = useState('');
+    const [isactive, setisactive] = useState(false);
 
     const handleSaveUser = async () => {
-        let res = await postCreateUser(fullname, password, userName, isactive);
+        try {
+            let res = await postCreateUser(fullname, username, password, isactive);
+            console.log("check log", res);
 
-        // Check if res.id is undefined or null, then set it to 1
-        if (!res.id) {
-            res.id = 1;
-        }
-        // Reset fields and perform other actions
-        if (res && res.id) {
-            handleClose();
-            setFullname('');
-            setUserName('');
-            setPassword('');
-            setisactive('');
+            if (res && res.id) {
+                handleClose();
+                toast.success("Create a user succeed!");
+                // Test API Update
+                handleUpdateUser({
+                    id: res.id,
+                    full_name: fullname,
+                    user_name: username,
+                    user_password: password,
+                    status_user: isactive
+                });
+            } else {
+                // Error
+                toast.error("Cannot create a user!");
+            }
+        } catch (error) {
             toast.success("Create a user succeed!");
-
-            // Test API Update
-            handleUpdateUser({
-                full_name: fullname,
-                user_name: userName,
-                id: res.id,
-                user_password: password,
-                status_user: isactive
-            });
-        } else {
-            // Error
-            toast.error("Cannot create a user!");
+            // Handle error as needed
+            toast.error("Error creating user!");
         }
-        console.log(res);
     };
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-    };
-    useEffect(() => {
-        setUserName(props.userName);
-    }, [props.userName]);
-    
     return (
         <div
             className="modal show"
@@ -61,22 +49,29 @@ export default function Createusers(props) {
                     <Modal.Title>Add New User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <form onSubmit={handleSubmit}>
+                    <form>
                         <div className="mb-3">
                             <label htmlFor="exampleInputEmail1" className="form-label">Name of user</label>
                             <input type="text" className="form-control" id="exampleInputEmail1" value={fullname} onChange={(e) => setFullname(e.target.value)} />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="exampleInputIP" className="form-label">Username</label>
-                            <input type="text" className="form-control" id="exampleInputIP" value={userName} onChange={(e) => setUserName(e.target.value)} />
+                            <label htmlFor="exampleInputUsername" className="form-label">Username</label>
+                            <input type="text" className="form-control" id="exampleInputUsername" value={username} onChange={(e) => setUserName(e.target.value)} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="exampleInputPort" className="form-label">Password</label>
                             <input type="password" className="form-control" id="exampleInputPort" value={password} onChange={(e) => setPassword(e.target.value)} />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="exampleInputUsername" className="form-label">Active</label>
-                            <input type="text" className="form-control" id="exampleInputUsername" value={isactive} onChange={(e) => setisactive(e.target.value)} />
+                            <label htmlFor="exampleInputActive" className="form-label">Active</label>
+                            <br></br>
+                            <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id="exampleInputActive"
+                                checked={isactive}
+                                onChange={() => setisactive(!isactive)}
+                            />
                         </div>
                     </form>
                 </Modal.Body>
