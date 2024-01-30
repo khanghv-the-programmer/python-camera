@@ -42,7 +42,7 @@ model_get_capture = ns.model('get_capture', {
     "From": fields.DateTime(require=True,dt_format="iso8601"),
     "To": fields.DateTime(require=True,dt_format="iso8601"),
 })
-model_update_camera = ns.model('edit_cameras', {
+model_update_camera = ns.model('update_cameras', {
     "id": fields.Integer(require=True,example=1),
     "is_active": fields.Boolean(require=True,example=True),
 })
