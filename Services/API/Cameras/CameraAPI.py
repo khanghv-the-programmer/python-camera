@@ -1,3 +1,5 @@
+import pandas.io.json
+
 from Services.API.restplus import api
 from flask_restplus import Resource, fields
 from flask import request, jsonify,make_response
@@ -34,7 +36,12 @@ model_delete_camera = ns.model('delete_cameras', {
 model_get_camera = ns.model('get_users', {
     "name": fields.String(require=True,example=''),
 })
-
+nowTime = datetime.utcnow()
+model_get_capture = ns.model('get_capture', {
+    "id": fields.Integer(require=True,example=1),
+    "From": fields.DateTime(require=True,dt_format="iso8601"),
+    "To": fields.DateTime(require=True,dt_format="iso8601"),
+})
 log = logging.getLogger(__name__)
 
 @ns.route('/EditCameras', methods=['POST','DELETE'])
@@ -76,35 +83,13 @@ class EditCamera(Resource):
         try:
             log.info(f"[{request.method}] [API][CreateUser]::: \n %s ___Start Time: {start_time}",
                      json.dumps(request.json))
-            #
-            # try:
-            #     con_str = CONN_URI.format(password=urllib.parse.quote(PASSWORD),
-            #                               database=SCHEMA_DEFAULT)
-            #     engine = create_engine(con_str)
-            #     query = CustomerByLogCoinHandler(engine, tenant_id=tenant_id).generate_query(condition)
-            #     data_frames = CommonHandler.get_data_all(con_str, query, "BaselineTimeNum")
-            #
-            #     # has_next_page = False
-            #     frame = []
-            #     if not data_frames.empty:
-            #         data_frames = data_frames.sort_values(by=['ExpiringDate'], ascending=False, ignore_index=True)
-            #         part_data = data_frames[offset:limit + offset]
-            #         # if len(part_data) > limit - 1:
-            #         #     has_next_page = True
-            #         #     part_data = part_data.drop(part_data.index[-1])
-            #         if not part_data.empty:
-            #             part_data = part_data.replace({np.nan: None})
-            #         frame = part_data.to_dict(orient='records')
-            #
-            #     total = len(data_frames)
+            jsonString = request.json
+            id = jsonString['id']
+            postgresql_engine = create_engine(CONN_STR, connect_args={'options': '-csearch_path={}'.format(SCHEMA)})
+            CameraHandler(postgresql_engine).deleteCamera(id)
             response = {
                 "status": 200,
-                "result": {
-                    # "hasNextPage": has_next_page,
-                    "totalRecord": 1,
-                    "items": 1,
-
-                }
+                "message":"Successfully Deleted Camera"
             }
             return jsonify(response)
             # except Exception as E:
@@ -191,3 +176,39 @@ class GetCamera(Resource):
             log.info(f"[{request.method}] [API][GetUserCondition]::: \n %s ___End Time: {datetime.now()}",
                      json.dumps(request.json))
 
+
+
+@ns.route('/GetCapture', methods=['POST'])
+class CaptureApi(Resource):
+    @ns.expect(model_get_capture, validate=False)
+    def post(self):
+        try:
+            jsonString= request.json
+            id= jsonString['id']
+            fromDate = jsonString['From']
+            toDate = jsonString['To']
+
+            postgresql_engine = create_engine(CONN_STR, connect_args={'options': '-csearch_path={}'.format(SCHEMA)})
+            captureDatas = CameraHandler(postgresql_engine).getCapture(id,fromDate,toDate)
+            print(captureDatas)
+            # _temp = {
+            #     "id", "img"
+            # }
+
+            result = {"listImages": []}
+
+            for item in captureDatas:
+                _temp = {}
+                id, img, date = item[0], item[1], item[2]
+                _temp["id"] = id
+                _temp["img"] = img
+                _temp["date"] = date.strftime("%m/%d/%Y, %H:%M:%S")
+                result["listImages"].append(_temp)
+
+            # frame = []
+            # if not captureDatas.empty:
+            #     part_data = captureDatas.replace({np.nan: None})
+            #     frame = part_data.to_dict(orient='records')
+            return jsonify(result)
+        except Exception as e:
+            log.error('[{}] [API][GetUserCondition] -> {}: {} '.format(request.method, request.url, str(e)))

@@ -161,10 +161,6 @@ def GetCamera(camera_id):
         #session.execute(cmd)
         #session.commit()
         return jsonify(camera.serialize()), 200
-    for itemCamera in CameraList:
-        if itemCamera.id == id:
-            camera = itemCamera.serialize()
-            return jsonify(camera),200
 
 if(__name__=="__main__"):
     app.run(debug=True)

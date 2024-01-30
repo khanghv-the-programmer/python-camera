@@ -1,5 +1,6 @@
 from Services.model import Cameras
 from sqlalchemy import and_
+from sqlalchemy import text
 from Services.Utilize import DBConnection
 import pandas as pd
 from sqlalchemy.dialects import postgresql
@@ -44,10 +45,31 @@ class CameraHandler:
             password = data['password']
             ip = data["ip"]
             port = data["port"]
-            camera = Cameras(name=name,username=user_name, password=password)
+            camera = Cameras(name=name,username=user_name, password=password,ip=ip, port=port)
             instance_camera.append(camera)
-            self.bulkInsertUser(instance_camera)
+            self.bulkInsertCamera(instance_camera)
+        except Exception as E:
+            raise E
+    def deleteCamera(self,id):
+        try:
+            with DBConnection(self.engine) as session:
+                cmd = text(f"DELETE FROM camera \
+                                                  WHERE id='{id}'")
+                session.execute(cmd)
+                session.commit()
         except Exception as E:
             raise E
 
+    def getCapture(self,camera_id,from_date,to_date):
+        try:
+            with DBConnection(self.engine) as session:
+                captures = []
+                cmd = text(f"SELECT e.camera_id ,c.image, c.capture_time \
+                            FROM streaming_camera.capture c  \
+                            INNER JOIN streaming_camera.event e  ON e.id=c.event_id\
+                            WHERE e.camera_id ='{camera_id}' and c.capture_time between '{from_date}' and '{to_date}'")
+                captures=session.execute(cmd).all()
 
+                return captures
+        except Exception as E:
+            raise E
