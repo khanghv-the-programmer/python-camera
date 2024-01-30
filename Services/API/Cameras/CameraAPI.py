@@ -42,7 +42,37 @@ model_get_capture = ns.model('get_capture', {
     "From": fields.DateTime(require=True,dt_format="iso8601"),
     "To": fields.DateTime(require=True,dt_format="iso8601"),
 })
+model_update_camera = ns.model('edit_cameras', {
+    "id": fields.Integer(require=True,example=1),
+    "is_active": fields.Boolean(require=True,example=True),
+})
 log = logging.getLogger(__name__)
+
+@ns.route('/updateCameras', methods=['POST'])
+class UpdateCamera(Resource):
+    @ns.expect(model_update_camera, validate=False)
+    def post(self):
+        start_time = datetime.utcnow()
+        try:
+            log.info(f"[{request.method}] [API][CreateUser]::: \n %s ___Start Time: {start_time}",
+                     json.dumps(request.json))
+            jsonString = request.json
+            id = jsonString['id']
+            is_active = jsonString['is_active']
+            postgresql_engine = create_engine(CONN_STR, connect_args={'options': '-csearch_path={}'.format(SCHEMA)})
+            CameraHandler(postgresql_engine).updateCamera(id,is_active)
+            response = {
+                "status": 200,
+                "message":"Successfully Update Camera"
+            }
+            return jsonify(response)
+
+        except Exception as e:
+            log.error('[{}] [API][CreateUser] -> {}: {} '.format(request.method, request.url, str(e)))
+
+        finally:
+            log.info(f"[{request.method}] [API][CreateUser]::: \n %s ___End Time: {datetime.now()}",
+                     json.dumps(request.json))
 
 @ns.route('/EditCameras', methods=['POST','DELETE'])
 class EditCamera(Resource):
@@ -86,6 +116,8 @@ class EditCamera(Resource):
             jsonString = request.json
             id = jsonString['id']
             postgresql_engine = create_engine(CONN_STR, connect_args={'options': '-csearch_path={}'.format(SCHEMA)})
+            CameraHandler(postgresql_engine).deleteCapture(id)
+            CameraHandler(postgresql_engine).deleteEvent(id)
             CameraHandler(postgresql_engine).deleteCamera(id)
             response = {
                 "status": 200,

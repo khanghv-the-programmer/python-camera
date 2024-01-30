@@ -54,11 +54,46 @@ class CameraHandler:
         try:
             with DBConnection(self.engine) as session:
                 cmd = text(f"DELETE FROM camera \
-                                                  WHERE id='{id}' CASCADE")
+                                                  WHERE id='{id}'")
                 session.execute(cmd)
                 session.commit()
         except Exception as E:
             raise E
+
+    def updateCamera(self, id,con):
+        try:
+            with DBConnection(self.engine) as session:
+                cmd = text(f"UPDATE camera \
+                           SET is_active = {con} \
+                         WHERE id='{id}'")
+                session.execute(cmd)
+                session.commit()
+        except Exception as E:
+            raise E
+
+    def deleteEvent(self, id):
+        try:
+            with DBConnection(self.engine) as session:
+                cmd = text(f"DELETE FROM event \
+                                WHERE camera_id='{id}'")
+                session.execute(cmd)
+                session.commit()
+        except Exception as E:
+            raise E
+    def deleteCapture(self,id):
+        try:
+            with DBConnection(self.engine) as session:
+                cmd = text(f"delete from capture c \
+                                using (select e.id \
+                                        from event e \
+                                        join camera  c2 on c2.id  = e.camera_id\
+                                        where c2.id = {id}) ev\
+                                where ev.id = c.event_id ")
+                session.execute(cmd)
+                session.commit()
+        except Exception as E:
+            raise E
+
 
     def getCapture(self,camera_id,from_date,to_date):
         try:
