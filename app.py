@@ -1,9 +1,11 @@
 from flask import Flask,jsonify,request,Blueprint
+from flask_cors import CORS
 from Services.API.Users.EditUser import ns as EditUser
 from Services.API.Cameras.CameraAPI import ns as CameraAPI
 from flask_restplus import Api
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
+CORS(app)
 db = SQLAlchemy()
 
 def configure_app(flask_app):
@@ -33,7 +35,7 @@ def initialize(flask_app):
 def main():
     configure_app(app)
     initialize(app)
-    app.run(debug=True, host="0.0.0.0", port=8080)
+    app.run(debug=True, host="0.0.0.0", port=8000)
 
 
 if __name__ == "__main__":

@@ -14,27 +14,27 @@ export default function Updatecameras(props) {
     const [port, setPort] = useState('');
     const [status, setStatus] = useState('');
 
-    const handleEditCamera = async () => {
-        try {
-            let res = await putUpdateCamera(cameraName, ip, userName, port, status);
-            if (res && res.updatedAt) {
-                handelEditCameraFromModal({
-                    id: dataCameraEdit.id,
-                    name_camera: cameraName,
-                    ip_camera: ip,
-                    user_name_camera: userName,
-                    port_camera: port,
-                    status_camera: status
-                });
-                handleClose();
-                toast.success("Update camera succeed!");
-            }
+    // const handleEditCamera = async () => {
+    //     try {
+    //         let res = await putUpdateCamera(cameraName, ip, userName, port, status);
+    //         if (res && res.updatedAt) {
+    //             handelEditCameraFromModal({
+    //                 id: dataCameraEdit.id,
+    //                 name_camera: cameraName,
+    //                 ip_camera: ip,
+    //                 user_name_camera: userName,
+    //                 port_camera: port,
+    //                 status_camera: status
+    //             });
+    //             handleClose();
+    //             toast.success("Update camera succeed!");
+    //         }
 
-        } catch (error) {
-            console.error('Error updating camera:', error);
-            toast.error('Error updating camera. Please try again.'); // Use toast to display an error message
-        }
-    };
+    //     } catch (error) {
+    //         console.error('Error updating camera:', error);
+    //         toast.error('Error updating camera. Please try again.'); // Use toast to display an error message
+    //     }
+    // };
     console.log("check", dataCameraEdit);
     
     useEffect(() => {
@@ -109,9 +109,9 @@ export default function Updatecameras(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={() => handleEditCamera()}>
+                    {/* <Button variant="primary" onClick={() => handleEditCamera()}>
                         Confirm
-                    </Button>
+                    </Button> */}
                 </Modal.Footer>
             </Modal>
         </div>

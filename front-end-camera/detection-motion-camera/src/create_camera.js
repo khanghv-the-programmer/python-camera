@@ -10,19 +10,20 @@ export default function Createcameras(props) {
     const { show, handleClose, handleUpdateCamera } = props;
     const [cameraName, setCameraName] = useState('');
     const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
     const [ip, setIp] = useState('');
     const [port, setPort] = useState('');
     const [status, setStatus] = useState('');
 
     const handleSaveCamera = async () => {
-        let res = await postCreateCamera(cameraName, userName, ip, port, status);
+        let res = await postCreateCamera(cameraName, userName, password, ip, port);
 
         // Check if res.id is undefined or null, then set it to 1
         if (!res.id) {
             res.id = 1;
         }
         // Reset fields and perform other actions
-        if (res && res.id) {
+        if (res ) {
             handleClose();
             setCameraName('');
             setUserName('');
@@ -32,42 +33,45 @@ export default function Createcameras(props) {
             toast.success("Create a camera succeed!");
 
             // Test API Update
-            handleUpdateCamera({
-                name_camera: cameraName,
-                user_name_camera: userName,
-                id: res.id,
-                ip_camera: ip,
-                port_camera: port,
-                status_camera: status
-            });
+            
         } else {
             // Error
             toast.error("Cannot create a camera!");
         }
         console.log(res);
     };
+
+    // handleUpdateCamera({
+    //     name_camera: cameraName,
+    //     user_name_camera: userName,
+    //     id: res.id,
+    //     ip_camera: ip,
+    //     port_camera: port,
+    //     status_camera: status
+    // });
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         // Kiểm tra rỗng và định dạng IP và Port
-        if (!cameraName || !ip || !port) {
-            alert('Please fill in all required fields (Name, IP, Port).');
-            return;
-        }
+        // if (!cameraName || !ip || !port) {
+        //     alert('Please fill in all required fields (Name, IP, Port).');
+        //     return;
+        // }
 
-        // Kiểm tra định dạng IP
-        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-        if (!ipRegex.test(ip)) {
-            alert('Please enter a valid IP address.');
-            return;
-        }
+        // // Kiểm tra định dạng IP
+        // const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+        // if (!ipRegex.test(ip)) {
+        //     alert('Please enter a valid IP address.');
+        //     return;
+        // }
 
-        // Kiểm tra định dạng Port
-        const portRegex = /^\d+$/;
-        if (!portRegex.test(port)) {
-            alert('Please enter a valid port number.');
-            return;
-        }
+        // // Kiểm tra định dạng Port
+        // const portRegex = /^\d+$/;
+        // if (!portRegex.test(port)) {
+        //     alert('Please enter a valid port number.');
+        //     return;
+        // }
 
     };
     useEffect(() => {
@@ -102,8 +106,8 @@ export default function Createcameras(props) {
                             <input type="text" className="form-control" id="exampleInputUsername" value={userName} onChange={(e) => setUserName(e.target.value)} />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="exampleInputStatus" className="form-label">Status</label>
-                            <input type="text" className="form-control" id="exampleInputStatus" value={status} onChange={(e) => setStatus(e.target.value)} />
+                            <label htmlFor="exampleInputStatus" className="form-label">Password</label>
+                            <input type="password" className="form-control" id="exampleInputStatus" value={password} onChange={(e) => setPassword(e.target.value)} />
                         </div>
                     </form>
                 </Modal.Body>

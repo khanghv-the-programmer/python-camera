@@ -3,15 +3,32 @@ import Headers from './components/header';
 import Footers from './components/footer';
 import { RegisApi } from "./services/userservices";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+    const navigate = useNavigate();
     const [full_name, setFullName] = useState("");
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const handleFullNameChange = (event) => {
+        setFullName(event.target.value);
+    }
+
+    const handleUserNameChange = (event) => {
+        setUserName(event.target.value);
+    }
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    }
+    const handleConfirmPasswordChange = (event) => {
+        setConfirmPassword(event.target.value);
+    }
+
     const handleSaveUser = async () => {
         // Validation checks
+
         if (!full_name || !userName || !password || !confirmPassword) {
             // Display an error message or handle the validation error
             alert("Please fill in all fields");
@@ -30,6 +47,7 @@ export default function Register() {
 
             // Handle the API response as needed
             console.log("Registration response:", res);
+            navigate("/login",{state:{message:"Register success. Login now!",name:userName}});
         } catch (error) {
             // Handle API call error
             console.error("Error during registration:", error);
@@ -51,24 +69,24 @@ export default function Register() {
                     </div>
                     <p className="col-12 text-p" >Safeguarding Security Through Visual Surveillance </p>
                     <div className="col-12 col-md-6 form-group register-input">
-                        <label>First Name</label>
-                        <input type="text" className="form-control" placeholder="Enter your first name" />
+                        <label>Full Name</label>
+                        <input type="text" className="form-control" placeholder="Enter your full name" onChange={handleFullNameChange}/>
                     </div>
-                    <div className="col-12 col-md-6 form-group register-input">
+                    {/* <div className="col-12 col-md-6 form-group register-input">
                         <label>Last Name</label>
-                        <input type="text" className="form-control" placeholder="Enter your last name" />
-                    </div>
+                        <input type="text" className="form-control" placeholder="Enter your last name" onChange={handleLastNameChange}/>
+                    </div> */}
                     <div className="col-12 form-group register-input">
                         <label>Username</label>
-                        <input type="text" className="form-control" placeholder="Enter your username"></input>
+                        <input type="text" className="form-control" placeholder="Enter your username" onChange={handleUserNameChange} />
                     </div>
                     <div className="col-12 form-group register-input">
                         <label>Password</label>
-                        <input type="password" className="form-control" placeholder="Enter your password"></input>
+                        <input type="password" className="form-control" placeholder="Enter your password" onChange={handlePasswordChange}/>
                     </div>
                     <div className="col-12 form-group register-input">
                         <label>Confirm Password</label>
-                        <input type="password" className="form-control" placeholder="Enter your re-password"></input>
+                        <input type="password" className="form-control" placeholder="Enter your re-password" onChange={handleConfirmPasswordChange}/>
                     </div>
                     <div className="col-12" >
                         <button className="btn-signup" onClick={() => handleSaveUser()}>Sign up</button>

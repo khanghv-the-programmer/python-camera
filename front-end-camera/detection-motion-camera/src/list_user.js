@@ -33,14 +33,7 @@ export default function ListUser() {
 
     useEffect(() => {
         getUsers();
-        Axios({
-            method: 'get',
-            headers: { 'Content-Type': 'application/json' },
-            url: 'http://192.168.5.39:8080/api/users/GetUser',
-            data:  getUsers,
-        }).then(function (response) {
-            console.log(response);
-        });
+        
     }, [])
 
     const handleUpdateUser = (user) => {

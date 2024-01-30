@@ -12,6 +12,8 @@ import Listcameras from './list_camera';
 import Createcameras from './create_camera';
 import Updatecameras from './update_camera';
 import ListUser from './list_user';
+import Welcome_user from './welcome_user';
+import ViewEvent from './viewEvent';
 import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -21,6 +23,10 @@ root.render(
       <Routes>
         <Route path='/' element={<App />}> </Route>
         <Route path="login" element={<Logins />}></Route>
+        {/* <Route path="welcome_user" element={<Welcome_user />}></Route> */}
+        <Route path="viewEvent" element={<ViewEvent />}></Route>
+
+        
         <Route path="register" element={<Registers />}></Route>
         <Route path="listcameras" element={<Listcameras />}></Route>
         <Route path="listusers" element={<ListUser />}></Route>
