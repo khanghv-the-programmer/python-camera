@@ -147,7 +147,7 @@ class CameraThread():
         try:
             with DBConnection(self.postgresql_engine) as session:
                 session = Session(bind=self.postgresql_engine)
-                self.active_camera = session.query(Cameras).filter(Cameras.is_active == 'True', Cameras.is_used == 'True', Cameras.ip == ip).first()
+                self.active_camera = session.query(Cameras).filter(Cameras.is_active == 'True', Cameras.ip == ip).first()
                 if(self.active_camera is None):
                     print("No camera found!")
                     return
@@ -195,6 +195,96 @@ class CameraThread():
         except Exception as e:
             yield ('Ahihi')
 
+    def active_camera_by_ip(self, ip):
+        try:
+            with DBConnection(self.postgresql_engine) as session:
+                session = Session(bind=self.postgresql_engine)
+                self.active_camera = session.query(Cameras).filter(Cameras.is_active == 'True', Cameras.ip == ip).first()
+                print(self.active_camera)
+                if(self.active_camera is None):
+                    print("No camera found!")
+                    return
+                self.url = f'rtsp://{self.active_camera.username}:{self.active_camera.password}@{self.active_camera.ip}:{self.active_camera.port}/h264_ulaw.sdp'
+                cmd = text(f'Update streaming_camera.camera set is_used=true where id={self.active_camera.id}')
+                session.execute(cmd)
+                session.commit()
+        except Exception as e:
+            raise e    
+        
+        try:
+            last_execute_time = time.time()
+            self.video_capture = c = cv2.VideoCapture(self.url)
+            mog = cv2.createBackgroundSubtractorMOG2()
+            self.counter = 0
+            self.captures = []
+            while True:
+            # frame : image read from capture
+                ret, frame = c.read()
+                if frame is None:
+                    continue
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            
+                fgmask = mog.apply(gray)
+            
+                kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+                fgmask = cv2.erode(fgmask, kernel, iterations=1)
+                fgmask = cv2.dilate(fgmask, kernel, iterations=1)
+            
+                contours, hierarchy = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                if any(cv2.contourArea(contour) > 1000 for contour in contours) == False:
+                        current_time = time.time()
+                        if(current_time - last_execute_time >= 3):
+                            if self.event is not None:
+                                new_event = Events(camera_id=self.active_camera.id)
+                                session.add(new_event)
+                                session.commit()
+                                if len(self.captures) > 0:
+                                    for capture in self.captures:
+                                        capture.event_id =  new_event.id
+                                        session.add(capture)
+                                    session.commit()
+                                self.event = None
+                                self.captures = []
+                            last_execute_time = current_time
+                for contour in contours:
+                # Ignore small contours
+                    
+                    if cv2.contourArea(contour) < 1000:
+                        continue
+                
+                # Draw bounding box around contour
+                    x, y, w, h = cv2.boundingRect(contour)
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                    # start capture
+                    # capture add từ từ mỗi 1s
+                current_time = time.time()
+                if(current_time - last_execute_time >= 3):
+                    if self.event is None:
+                        self.event = Events(camera_id=self.active_camera.id)
+                    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 30]
+                    self.reval, buffer = cv2.imencode('.jpg', frame, encode_param)
+                    base64_image = base64.b64encode(buffer).decode('utf-8') 
+                    self.captures.append(Captures(image=base64_image, capture_time=datetime.datetime.now()))
+                    last_execute_time = current_time
+                    # image_data = base64.b64decode(base64_image)            
+                    # image_buffer = BytesIO(image_data)
+                    # img = Image.open(image_buffer)
+                    # img.show()
+                    
+                cv2.imshow('Motion Detection', cv2.resize(frame, (1280, 720)))
+            # 1s add vào captures
+                if cv2.waitKey(1) == ord('q'):
+                    cmd = text(f'Update camera set is_used=False where id={self.active_camera.id}') 
+                    session.execute(cmd)
+                    session.commit()
+                    break
+        except Exception as e:
+            cmd = text(f'Update camera set is_used=False where id={self.active_camera.id}') 
+            session.execute(cmd)
+            session.commit()
+            raise e
+    
+        
 
 
 
