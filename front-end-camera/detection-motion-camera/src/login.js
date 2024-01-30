@@ -9,7 +9,7 @@ import {useLocation} from 'react-router-dom';
 
 import { useNavigate } from "react-router-dom";
 
-export default function Logins() {
+export default function Logins(props) {
     const location = useLocation();
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
@@ -58,7 +58,7 @@ export default function Logins() {
                         {send && !auth && <p className="col-12 text-p" >Username or password is incorrect </p>}
                         <div className="col-12 form-group login-input">
                             <label>Username</label>
-                            <input type="text" className="form-control" placeholder="Enter your username" value={username} onChange={(e) =>{ console.log(e.target.value);setUsername(e.target.value)}} autoComplete="current-username"></input>
+                            <input type="text" className="form-control" placeholder="Enter your username" value={username} onChange={(e) =>{setUsername(e.target.value)}} autoComplete="current-username"></input>
                         </div>
                         <div className="col-12 form-group login-input">
                             <label>Password</label>

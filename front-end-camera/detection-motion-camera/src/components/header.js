@@ -3,7 +3,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 export default function Headers() {
+    const location = useLocation();
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark" >
@@ -17,6 +19,7 @@ export default function Headers() {
                         <Nav>
                             <NavLink to="/" className="nav-link">Home</NavLink>
                             <NavLink to="/listcameras" className="nav-link">Live Camera</NavLink>
+                            
                             <NavLink to="/listusers" className="nav-link">Manage User</NavLink>
                         </Nav>
                     </Nav>

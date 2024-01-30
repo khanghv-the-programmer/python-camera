@@ -19,7 +19,7 @@ const putUpdateCamera = (cameraName, userName, ip, port, status) => {
 
 const Deletecamera = (camera) => {
     console.log("camera",camera);
-    return axios.delete(`/api/cameras/EditCameras`,{"id":camera});
+    return axios.delete("/api/cameras/EditCameras",{data:{"id":camera}});
 }
 
 const LoginApi = (username) => {

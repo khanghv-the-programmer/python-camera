@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Headers from './components/header';
 import Footers from './components/footer';
 import Createusers from "./create_user";
-import { fetchAllusers } from "./services/userservices";
+import { fetchAllusers,RegisApi } from "./services/userservices";
 import { useEffect, useState } from "react";
 import { ToastContainer } from 'react-toastify';
 import Axios from 'axios';
@@ -36,8 +36,9 @@ export default function ListUser() {
         
     }, [])
 
-    const handleUpdateUser = (user) => {
-        setlistusers([user, ...listusers]);
+    const handleUpdateUser = async(full_name, userName, password) => {
+       await RegisApi(full_name, userName, password)
+        // setlistusers([user, ...listusers]);
     }
 
     return (

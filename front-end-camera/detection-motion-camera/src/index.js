@@ -15,7 +15,7 @@ import ListUser from './list_user';
 import Welcome_user from './welcome_user';
 import ViewEvent from './viewEvent';
 import 'react-toastify/dist/ReactToastify.css';
-
+// import { useLocation } from 'react-router-dom';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

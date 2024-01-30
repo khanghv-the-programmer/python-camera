@@ -18,17 +18,17 @@ export default function Createusers(props) {
             let res = await postCreateUser(fullname, username, password, isactive);
             console.log("check log", res);
 
-            if (res && res.id) {
+            if (res ) {
                 handleClose();
                 toast.success("Create a user succeed!");
                 // Test API Update
-                handleUpdateUser({
-                    id: res.id,
-                    full_name: fullname,
-                    user_name: username,
-                    user_password: password,
-                    status_user: isactive
-                });
+                // handleUpdateUser({
+                //     id: res.id,
+                //     full_name: fullname,
+                //     user_name: username,
+                //     user_password: password,
+                //     status_user: isactive
+                // });
             } else {
                 // Error
                 toast.error("Cannot create a user!");

@@ -20,9 +20,10 @@ import e from "cors";
 export default function Listcamera() {
     const location = useLocation();
     const navigate = useNavigate();
-    if(!location.state?.name ){
-        navigate("/login")
-    }
+    const [user,setUser] = useState(location.state?.name)
+    // if(!location.state?.name ){
+    //     navigate("/login")
+    // }
     const [images,setImages] = useState([])
     const [loading, setLoading] = useState(false);
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
@@ -83,7 +84,8 @@ export default function Listcamera() {
 
     const handleUpdateCamera = (camera) => {
         postCreateCamera()
-        setlistcameras([camera, ...listcameras]);
+        // setlistcameras([camera, ...listcameras]);
+        window.location.reload()
     }
 
     const handleEditCamera = (camera) => {
@@ -91,7 +93,9 @@ export default function Listcamera() {
         setIsShowModalEdit(true);
     }
     const handleDeleteCamera = async(camera) => {
+
         await Deletecamera(camera)
+        window.location.reload()
     }
     const handelDeleteCameraFromModal = (camera) => {
         let cloneListCamera = _.cloneDeep(listcameras);
@@ -144,9 +148,9 @@ export default function Listcamera() {
                                         {/* <Button variant="secondary"
                                             onClick={() => handleEditCamera(item)}
                                         >Edit camera</Button>{' '} */}
-                                        {/* <Button variant="danger"
-                                            onClick={() => handleDeleteCamera(item.id)}
-                                        >Delete</Button>{' '} */}
+                                        <Button variant="danger"
+                                            onClick={(e)=>handleDeleteCamera(item.id)}
+                                        >Delete</Button>{' '}
                                     </td>
                                 </tr>
                             )
