@@ -46,6 +46,9 @@ model_update_camera = ns.model('edit_cameras', {
     "id": fields.Integer(require=True,example=1),
     "is_active": fields.Boolean(require=True,example=True),
 })
+model_get_lastest_capture = ns.model('get_capture', {
+    "id": fields.Integer(require=True,example=1),
+})
 log = logging.getLogger(__name__)
 
 @ns.route('/updateCameras', methods=['POST'])
@@ -215,7 +218,8 @@ class CaptureApi(Resource):
     @ns.expect(model_get_capture, validate=False)
     def post(self):
         try:
-            jsonString= request.json
+            jsonString = request.json
+
             id= jsonString['id']
             fromDate = jsonString['From']
             toDate = jsonString['To']
@@ -241,6 +245,21 @@ class CaptureApi(Resource):
             # if not captureDatas.empty:
             #     part_data = captureDatas.replace({np.nan: None})
             #     frame = part_data.to_dict(orient='records')
+            return jsonify(result)
+        except Exception as e:
+            log.error('[{}] [API][GetUserCondition] -> {}: {} '.format(request.method, request.url, str(e)))
+@ns.route('/GetLastestCapture', methods=['POST'])
+class CaptureLatestApi(Resource):
+    @ns.expect(model_get_capture, validate=False)
+    def post(self):
+        try:
+            jsonString= request.json
+            postgresql_engine = create_engine(CONN_STR, connect_args={'options': '-csearch_path={}'.format(SCHEMA)})
+            captureDatas = CameraHandler(postgresql_engine).getLastCapture(jsonString['id'])
+            result ={}
+            result["id"] = captureDatas[0]
+            result["img"] = captureDatas[1]
+            result["date"] = captureDatas[2].strftime("%m/%d/%Y, %H:%M:%S")
             return jsonify(result)
         except Exception as e:
             log.error('[{}] [API][GetUserCondition] -> {}: {} '.format(request.method, request.url, str(e)))

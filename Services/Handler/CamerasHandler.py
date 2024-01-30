@@ -108,3 +108,17 @@ class CameraHandler:
                 return captures
         except Exception as E:
             raise E
+
+    def getLastCapture(self,camera_id):
+        try:
+            with DBConnection(self.engine) as session:
+                cmd = text(f"SELECT e.camera_id ,c.image, c.capture_time \
+                            FROM streaming_camera.capture c  \
+                            INNER JOIN streaming_camera.event e  ON e.id=c.event_id\
+                            WHERE e.camera_id ='{camera_id}' \
+                            ORDER BY c.capture_time DESC")
+                captures=session.execute(cmd).first()
+
+                return captures
+        except Exception as E:
+            raise E
