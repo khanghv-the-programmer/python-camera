@@ -9,7 +9,7 @@ class Cameras(Base):
     port = Column(String,nullable=False)
     username = Column(String)
     password = Column(String)
-    is_active = Column(Boolean, nullable=False, default=False)
+    is_active = Column(Boolean, nullable=False, default=True)
     is_used = Column(Boolean, nullable=False, default=False)
 
     def serialize(self):

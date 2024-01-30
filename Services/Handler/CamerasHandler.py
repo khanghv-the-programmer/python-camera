@@ -54,7 +54,7 @@ class CameraHandler:
         try:
             with DBConnection(self.engine) as session:
                 cmd = text(f"DELETE FROM camera \
-                                                  WHERE id='{id}'")
+                                                  WHERE id='{id}' CASCADE")
                 session.execute(cmd)
                 session.commit()
         except Exception as E:
